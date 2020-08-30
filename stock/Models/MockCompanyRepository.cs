@@ -42,7 +42,7 @@ namespace stock.Models
         public async Task<Company> GetAsync(int id)
         {
 
-            var client = new RestClient($"http://iss.moex.com/iss/history/engines/stock/markets/index/securities.json?date=2010-08-20");
+            var client = new RestClient($"http://iss.moex.com/iss/securities.json?q=sber");
             var request = new RestRequest(Method.GET);
             IRestResponse response = await client.ExecuteAsync(request);
 

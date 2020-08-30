@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace stock.ViewModels
 {
-    public class GetCompanyInfoAPIControllerViewModel
+    public class GetCompanyInfoAPIViewModel
     {
         public int Id { get; set; }
         [Required]
