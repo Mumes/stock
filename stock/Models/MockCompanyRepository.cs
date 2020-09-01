@@ -15,11 +15,11 @@ namespace stock.Models
 
         public MockCompanyRepository()
         {
-            companiesList = new List<Company>
-            {
-                new Company{Id = 1, Name = "GazProm",Price = 100 },
-                new Company{Id = 1, Name = "MTS",Price = 100 },
-                new Company{Id = 1, Name = "Megafone",Price = 100 },
+            companiesList = new List<Company>();
+            {             
+               //new Company{Id = 1, Name = "GazProm",Price = 100 },
+               //new Company{Id = 1, Name = "MTS",Price = 100 },
+               //new Company{Id = 1, Name = "Megafone",Price = 100 },
             };
 
         }
@@ -37,7 +37,31 @@ namespace stock.Models
             return company;
         }
 
+        public async Task<IEnumerable<Company>> GetAllAsync()
+        {
+            var client = new RestClient($"https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json");
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = await client.ExecuteAsync(request);
+            if (response.IsSuccessful)
+            {
+                var content = JsonConvert.DeserializeObject<JToken>(response.Content)["securities"];
+                       
+                foreach (var company in content["data"].Children())
+                {
+                    if (company != null)
+                    {
+                        companiesList.Add(new Company
+                        {
+                            Id = companiesList.DefaultIfEmpty().Max(e =>e== null ? 0 :e.Id) + 1,
+                            Name = company[2]==null? "null": company[2].Value<string>(),
+                            Price = company[3].Value<double?>() == null ? 0.0 : company[3].Value<double>()
+                        });
+                    }
+                }               
+            }
 
+            return companiesList;
+        }
 
         public async Task<Company> GetAsync(int id)
         {

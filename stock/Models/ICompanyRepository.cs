@@ -11,6 +11,7 @@ namespace stock.Models
 
         Task<Company> GetAsync(int id);
         IEnumerable<Company> GetAll();
+        Task<IEnumerable<Company>> GetAllAsync();
         Company Add(Company company);
         Company Update(Company cnangedCompany);
         Company Delete(int id);

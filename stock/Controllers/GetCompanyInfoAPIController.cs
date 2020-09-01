@@ -19,8 +19,8 @@ namespace stock.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var model = await _companyRepository.GetAsync(0);
-            return View();
+            var model = await _companyRepository.GetAllAsync();
+            return View(model);
         }
 
     }
