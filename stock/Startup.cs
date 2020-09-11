@@ -28,8 +28,9 @@ namespace stock
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
             services.AddControllersWithViews();
-            services.AddScoped<IProductRepository, MockProductRepository>();
-            services.AddScoped<IStockRepository, SQLStockRepository>();
+            services.AddScoped<IRepository<Product>, SQLProductRepository>();
+            services.AddScoped<IRepository<Stock>, SQLStockRepository>();
+            services.AddScoped<IRepository<DatedPrice>, SQLDatedPriceRepository>();
         }
 
 
