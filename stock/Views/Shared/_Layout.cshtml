@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - stock</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/lib/chartist/chartist.min.js"></script>
 </head>
 <body>
     <header>
@@ -40,6 +40,14 @@
             <head>
                 <meta name="viewport" content="width=device-width" />
                 <environment include="Development">
+                    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+                          crossorigin="anonymous"
+                          asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
+                          asp-fallback-test-class="sr-only"
+                          asp-fallback-test-property="position"
+                          asp-fallback-test-value="absolute"
+                          asp-suppress-fallback-integrity="true" />
                     <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
                     <script src="~/lib/jquery/jquery.js"></script>
                     <script src="~/lib/jquery-validate/jquery.validate.js"></script>

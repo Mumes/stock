@@ -1,18 +1,45 @@
 ﻿
-@model IEnumerable<Product>
+@model DetailsViewModel
 @{
-    ViewBag.Title = "Employee list";
+    ViewBag.Title = "Products  list from DB";
 
 }
+<link rel="stylesheet"
+      href="~/lib/chartist/chartist.min.css">
+
+
+
+
 <div class="card-deck">
-    @foreach (var emp in Model)
+    @foreach (var emp in Model.Product)
     {
         <div class="card m-3" style="min-width:18rem;max-width:30.5%;">
             <div class="card-header">
                 <h3> @emp.Name</h3>
             </div>
             <div class="card-body">
-                <h4>Цена акции на последних торгах: @emp.Price</h4>
+                @foreach (var price in Model.DatedPrices.Where(p => p.ProductId == emp.Id))
+                {
+                    <h4>Цена акции на последних торгах: @price.Price</h4>
+                    <h4>Дата последних торгов: @price.DateOfOperation</h4>
+                    <div class="ct-chart ct-golden-section" id='id'+ @price.ProductId></div>
+                    <script>
+                        var data = {
+                            // A labels array that can contain any sort of values
+                            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+                            // Our series array that contains series objects or in this case series data arrays
+                            series: [
+                                [5, 2, 4, 2, 0]
+                            ]
+                        };
+
+                        // Create a new line chart object where as first parameter we pass in a selector
+                        // that is resolving to our chart container element. The Second parameter
+                        // is the actual data object.
+                        new Chartist.Line('#id'+@price.ProductId, data);
+                    </script>
+                }
+
             </div>
             <div class="card-footer text-center">
                 <a asp-controller="home" asp-action="details" asp-route-id="@emp.Id" class="btn btn-primary m-1">View</a>
@@ -22,3 +49,4 @@
         </div>
     }
 </div>
+<script src="~/lib/chartist/chartist.min.js"></script>

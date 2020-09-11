@@ -10,6 +10,7 @@ namespace stock.Models
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<Stock> Stocks { get; set; }
+        public DbSet<DatedPrice> DatedPrices { get; set; }
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
         {
             Database.EnsureCreated();
