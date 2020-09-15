@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace stock.Models
+namespace stockDataEF.Models
 {
     public class SQLProductRepository : IRepository<Product>
     {
@@ -18,8 +18,7 @@ namespace stock.Models
             this.logger = logger;
         }
         public Product Add(Product product)
-        {
-            context.Entry(product).State = EntityState.Unchanged;
+        {           
             context.Add(product);
             context.SaveChanges();
             return product;

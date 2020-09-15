@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RestSharp;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using stock.Buisness.APIRead.APIModels;
 
-namespace stock.Models
+
+namespace stockDataEF.Models
 {
     public class MockProductRepository 
     {
@@ -38,11 +35,7 @@ namespace stock.Models
             return product;
         }
 
-        public async Task<IEnumerable<APIProduct>> GetAllAsync(Stock stock)
-        {
-            await stock.StockRead.ReadAPI(stock.StockRead.Stock.ProductsAPIString);
-            return  stock.StockRead.DeserialiseProductsAsync();
-        }
+       
 
        
 

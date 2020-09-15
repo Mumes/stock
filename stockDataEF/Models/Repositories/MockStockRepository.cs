@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace stock.Models
+namespace stockDataEF.Models
 {
     public class MockStockRepository:IRepository<Stock>
     {
@@ -12,7 +12,7 @@ namespace stock.Models
         {
             stocksList = new List<Stock>()
             {
-                new Stock{Id = 1, Name = "Московская биржа", ProductsAPIString = @"https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json"}
+               // new Stock{Id = 1, Name = "Московская биржа", ProductsAPIString = @"https://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json"}
             };
 
         }

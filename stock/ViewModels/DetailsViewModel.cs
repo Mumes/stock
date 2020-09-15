@@ -1,4 +1,5 @@
 ﻿using stock.Models;
+using stockDataEF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace stock.ViewModels
     {
         public IEnumerable<Product> Product { get; set; }
         public IEnumerable<DatedPrice> DatedPrices { get; set; }
+        IRepository<Product> Repository { get; set; }
     }
 }

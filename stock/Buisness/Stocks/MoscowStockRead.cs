@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using stock.Buisness.APIRead.APIModels;
 using stock.Models;
+using stockDataEF.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

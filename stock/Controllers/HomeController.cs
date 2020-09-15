@@ -5,12 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using stock.Buisness.APIRead.APIModels;
 using stock.Buisness.APIRead.Stocks;
 using stock.Models;
 using stock.ViewModels;
+using stockDataEF.Models;
+using stockDataEF.Models.Tables;
 
-namespace stock.Controllers
+namespace stock.Models
 {
     public class HomeController : Controller
     {
@@ -30,21 +31,18 @@ namespace stock.Controllers
         [HttpGet]
         public ViewResult Add()
         {
-            return View();
+            var model = new Stock();
+            model.ProductsAPIStrings.Add(new APIStrings());
+            return View(model);
         }
 
         [HttpPost]
         public IActionResult Add(Stock model)
         {
             if (ModelState.IsValid)
-            {
-                var stock = new Stock
-                {
-                    Name = model.Name,
-                    ProductsAPIString = model.ProductsAPIString
-                };
-                stockRepository.Add(stock);
-                return RedirectToAction("details", new { id = stock.Id });
+            {            
+                stockRepository.Add(model);
+                return RedirectToAction("details", new { id = model.Id });
             }
             return View();
         }
@@ -58,16 +56,14 @@ namespace stock.Controllers
         public async  Task<IActionResult> Read(int Id)
         {            
             var stock = stockRepository.Get(Id);
-            stock.StockRead = new MoscowStockRead();
-            await stock.StockRead.ReadAPI(stock.ProductsAPIString);
+            var readStockMethod = new MoscowStockRead();
+            await readStockMethod.ReadAPI(stock.ProductsAPIStrings.FirstOrDefault(s=>s.Description=="чтение приборов").Name);
 
-            var model= stock.StockRead.DeserialiseProductsAsync();
+            var model= readStockMethod.DeserialiseProductsAsync();
 
             foreach (var product in model)
             {
-                product.Product.StockId = Id;
-                product.Product.Stock = stock;
-                
+                               
                 var checkDuplicateProductFromDB = productRepository.GetAll().FirstOrDefault(d => d.Name == product.Product.Name);
                 if (checkDuplicateProductFromDB != null)
                 {
@@ -76,6 +72,7 @@ namespace stock.Controllers
                 else 
                 {
                     product.DatedPrice.Product = product.Product;
+                    product.Product.Stock = stock;
                     productRepository.Add(product.Product);
                 }                                 
                 priceRepository.Add(product.DatedPrice);
@@ -84,9 +81,6 @@ namespace stock.Controllers
         }
         public  IActionResult Details(int id)
         {
-            var stock = stockRepository.Get(id);
-            stock.StockRead = new MoscowStockRead();
-
             var model = new DetailsViewModel
             {
                 Product = productRepository.GetAll().Where(p => p.StockId == id),

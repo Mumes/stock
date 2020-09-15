@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
 using stock.Models;
+using stockDataEF.Models;
 
 namespace stock.Controllers
 {
@@ -19,7 +20,7 @@ namespace stock.Controllers
             this._productRepository = _productRepository;
             this._stockRepository = _stockRepository;
         }
-        public async Task<IActionResult> Index()
+        public  IActionResult Index()
         {
             var model =  _productRepository.GetAll();
             return View(model);

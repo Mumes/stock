@@ -3,23 +3,25 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using stock.Models;
+using stockDataEF.Models;
 
-namespace stock.Migrations
+namespace stockDataEF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200915115523_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.7")
+                .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("stock.Models.DatedPrice", b =>
+            modelBuilder.Entity("stockDataEF.Models.DatedPrice", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -42,7 +44,7 @@ namespace stock.Migrations
                     b.ToTable("DatedPrices");
                 });
 
-            modelBuilder.Entity("stock.Models.Product", b =>
+            modelBuilder.Entity("stockDataEF.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -50,7 +52,9 @@ namespace stock.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<int>("StockId")
                         .HasColumnType("int");
@@ -62,7 +66,7 @@ namespace stock.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("stock.Models.Stock", b =>
+            modelBuilder.Entity("stockDataEF.Models.Stock", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,29 +74,64 @@ namespace stock.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProductsAPIString")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.HasKey("Id");
 
                     b.ToTable("Stocks");
                 });
 
-            modelBuilder.Entity("stock.Models.DatedPrice", b =>
+            modelBuilder.Entity("stockDataEF.Models.Tables.APIStrings", b =>
                 {
-                    b.HasOne("stock.Models.Product", "Product")
-                        .WithMany()
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(400)")
+                        .HasMaxLength(400);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(400)")
+                        .HasMaxLength(400);
+
+                    b.Property<int>("StockId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StockId");
+
+                    b.ToTable("APIStrings");
+                });
+
+            modelBuilder.Entity("stockDataEF.Models.DatedPrice", b =>
+                {
+                    b.HasOne("stockDataEF.Models.Product", "Product")
+                        .WithMany("DatedPrices")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("stock.Models.Product", b =>
+            modelBuilder.Entity("stockDataEF.Models.Product", b =>
                 {
-                    b.HasOne("stock.Models.Stock", "Stock")
-                        .WithMany()
+                    b.HasOne("stockDataEF.Models.Stock", "Stock")
+                        .WithMany("Products")
+                        .HasForeignKey("StockId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("stockDataEF.Models.Tables.APIStrings", b =>
+                {
+                    b.HasOne("stockDataEF.Models.Stock", "Stock")
+                        .WithMany("ProductsAPIStrings")
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

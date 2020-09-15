@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using stockDataEF.Models.Tables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace stock.Models
+namespace stockDataEF.Models
 {
     public class SQLStockRepository:IRepository<Stock>
     {
@@ -43,7 +45,7 @@ namespace stock.Models
         public Stock Get(int id)
         {
             logger.LogTrace("stock geting");
-            var emp = context.Stocks.Find(id);
+            var emp = context.Stocks.Include(s=>s.ProductsAPIStrings).Include(p=>p.Products).FirstOrDefault(s=>s.Id ==id);
             return emp;
         }
 

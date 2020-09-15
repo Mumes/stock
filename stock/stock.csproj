@@ -21,4 +21,8 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\stockDataEF\stockDataEF.csproj" />
+  </ItemGroup>
+
 </Project>
