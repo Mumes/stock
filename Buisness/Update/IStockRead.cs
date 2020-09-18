@@ -1,5 +1,4 @@
 ﻿using stock.Buisness.APIRead.APIModels;
-using stock.Models;
 using stockDataEF.Models;
 using System;
 using System.Collections.Generic;
@@ -10,6 +9,8 @@ namespace stock.Buisness.APIRead
 {
    public interface IStockRead
     {
+        public int UpdateTimeSeconds { get; }
+        public DateTime LastUpdated{ get; set; }
         Stock Stock { get; set; }
         Task<string> ReadAPI(string url);
         IEnumerable<APIProduct>  DeserialiseProductsAsync();      

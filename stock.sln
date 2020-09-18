@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stock", "stock\stock.csproj", "{A45B537A-C44D-4C30-ACEC-D92958767B4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stockDataEF", "stockDataEF\stockDataEF.csproj", "{9517BF4B-7134-4547-AF8E-BCB2B2DF1B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "stockDataEF", "stockDataEF\stockDataEF.csproj", "{9517BF4B-7134-4547-AF8E-BCB2B2DF1B3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Buisness", "Buisness\Buisness.csproj", "{FC9E0E33-33B6-4532-8C6E-93775E64C607}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{9517BF4B-7134-4547-AF8E-BCB2B2DF1B3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9517BF4B-7134-4547-AF8E-BCB2B2DF1B3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9517BF4B-7134-4547-AF8E-BCB2B2DF1B3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC9E0E33-33B6-4532-8C6E-93775E64C607}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC9E0E33-33B6-4532-8C6E-93775E64C607}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC9E0E33-33B6-4532-8C6E-93775E64C607}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC9E0E33-33B6-4532-8C6E-93775E64C607}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

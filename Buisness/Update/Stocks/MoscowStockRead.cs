@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using stock.Buisness.APIRead.APIModels;
-using stock.Models;
 using stockDataEF.Models;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,11 @@ namespace stock.Buisness.APIRead.Stocks
     public class MoscowStockRead : IStockRead
     {
         public Stock Stock { get ; set; }
+
+        public int UpdateTimeSeconds { get; } = 20000;
+
+
+        public DateTime LastUpdated { get; set; }
 
         private JToken content;
         
@@ -36,6 +40,7 @@ namespace stock.Buisness.APIRead.Stocks
                         }                                                                   
                     }) ;
                 }
+
             }
             return companiesList;
         }

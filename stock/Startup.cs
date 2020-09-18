@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Buisness.Update;
+using Hangfire;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,12 +34,16 @@ namespace stock
             services.AddScoped<IRepository<Product>, SQLProductRepository>();
             services.AddScoped<IRepository<Stock>, SQLStockRepository>();
             services.AddScoped<IRepository<DatedPrice>, SQLDatedPriceRepository>();
+            services.AddScoped<UpdateStocks>();
+            services.AddHangfire(x => x.UseSqlServerStorage(connection));
+            services.AddHangfireServer();
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UpdateStocks updateStocks)
+        { 
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -61,6 +67,8 @@ namespace stock
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            app.UseHangfireDashboard();
+            RecurringJob.AddOrUpdate(() => updateStocks.Update(), Cron.Minutely);
         }
     }
 }

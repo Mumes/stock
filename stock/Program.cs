@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using Buisness.Update;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using stockDataEF.Models;
 
 namespace stock
 {
@@ -13,6 +18,9 @@ namespace stock
     {
         public static void Main(string[] args)
         {
+
+            
+
             CreateHostBuilder(args).Build().Run();
         }
 

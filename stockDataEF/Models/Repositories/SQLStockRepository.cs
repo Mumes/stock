@@ -19,8 +19,6 @@ namespace stockDataEF.Models
             this.logger = logger;
         }
 
-
-
         public Stock Add(Stock stock)
         {
             context.Add(stock);

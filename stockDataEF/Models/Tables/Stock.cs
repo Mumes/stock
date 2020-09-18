@@ -16,6 +16,8 @@ namespace stockDataEF.Models
         [Required]
         [MaxLength(200)]
         public string Name { get; set; }
+
+        public DateTime LastUpdated { get; set; }
         public List<APIStrings> ProductsAPIStrings { get; set; } = new List<APIStrings>();
         public List<Product> Products { get; set; } = new List<Product>();
     }

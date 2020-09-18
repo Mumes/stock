@@ -68,14 +68,23 @@ namespace stock.Models
                 if (checkDuplicateProductFromDB != null)
                 {
                     product.DatedPrice.Product = checkDuplicateProductFromDB;
+                    product.Product = checkDuplicateProductFromDB;
                 }
                 else 
                 {
                     product.DatedPrice.Product = product.Product;
                     product.Product.Stock = stock;
                     productRepository.Add(product.Product);
-                }                                 
-                priceRepository.Add(product.DatedPrice);
+                }
+
+                var checkDuplicatePriceFromDB = priceRepository.GetAll().FirstOrDefault(d => d.DateOfOperation == product.DatedPrice.DateOfOperation&&
+                                                                                             d.ProductId==product.Product.Id);
+                if (checkDuplicatePriceFromDB == null)
+                {
+                    priceRepository.Add(product.DatedPrice);
+                }
+               
+               
             }         
             return View(model);
         }
