@@ -57,9 +57,9 @@ namespace stock.Models
         {            
             var stock = stockRepository.Get(Id);
             var readStockMethod = new MoscowStockRead();
-            await readStockMethod.ReadAPI(stock.ProductsAPIStrings.FirstOrDefault(s=>s.Description=="чтение приборов").Name);
+           
 
-            var model= readStockMethod.DeserialiseProductsAsync();
+            var model= await readStockMethod.DeserialiseProductsAsync();
 
             foreach (var product in model)
             {

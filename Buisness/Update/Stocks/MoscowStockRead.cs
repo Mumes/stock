@@ -12,32 +12,32 @@ namespace stock.Buisness.APIRead.Stocks
 {
     public class MoscowStockRead : IStockRead
     {
-        public Stock Stock { get ; set; }
+        public Stock Stock { get ; set; } 
 
         public int UpdateTimeSeconds { get; } = 20000;
 
 
         public DateTime LastUpdated { get; set; }
 
-        private JToken content;
+       
         
 
-        public   IEnumerable<APIProduct> DeserialiseProductsAsync()
+        public async   Task<IEnumerable<APIProduct>> DeserialiseProductsAsync()
         {
             var companiesList = new List<APIProduct>();
-            
+            var content = await ReadAPI(@"http://iss.moex.com/iss/engines/stock/markets/shares/boards/TQBR/securities.json");
             foreach (var product in content["data"].Children())
             {
                 if (product != null)
-                {                   
+                {
                     companiesList.Add(new APIProduct
                     {
-                        Product = new Product {Name = product[2] == null ? "null" : product[2].Value<string>() },
+                        Product = new Product { Name = product[2] == null ? "null" : product[2].Value<string>() },
                         DatedPrice = new DatedPrice
                         {
-                            Price = product[3].Value<double?>() == null ? 0.0 : product[3].Value<double>(), 
-                            DateOfOperation = product[17].Value<DateTime>() 
-                        }                                                                   
+                            Price = product[3].Value<double?>() == null ? 0.0 : product[3].Value<double>(),
+                            DateOfOperation = product[17].Value<string>() == "0000-00-00" ? DateTime.MinValue : product[17].Value<DateTime>()
+                        }
                     }) ;
                 }
 
@@ -45,7 +45,7 @@ namespace stock.Buisness.APIRead.Stocks
             return companiesList;
         }
 
-        public async Task<string>  ReadAPI(string url)
+        public async Task<JToken>  ReadAPI(string url)
         {
             var companiesList = new List<Product>();
             var client = new RestClient(url);
@@ -53,8 +53,8 @@ namespace stock.Buisness.APIRead.Stocks
             IRestResponse response = await client.ExecuteAsync(request);
             if (response.IsSuccessful)
             {
-                content = JsonConvert.DeserializeObject<JToken>(response.Content)["securities"];
-                return response.Content;
+                return  JsonConvert.DeserializeObject<JToken>(response.Content)["securities"];
+                //return response.Content;
             }
                 return "";
         }

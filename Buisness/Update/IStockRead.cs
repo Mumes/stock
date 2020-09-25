@@ -1,4 +1,5 @@
-﻿using stock.Buisness.APIRead.APIModels;
+﻿using Newtonsoft.Json.Linq;
+using stock.Buisness.APIRead.APIModels;
 using stockDataEF.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace stock.Buisness.APIRead
         public int UpdateTimeSeconds { get; }
         public DateTime LastUpdated{ get; set; }
         Stock Stock { get; set; }
-        Task<string> ReadAPI(string url);
-        IEnumerable<APIProduct>  DeserialiseProductsAsync();      
+        Task<JToken> ReadAPI(string url);
+        Task<IEnumerable<APIProduct>>  DeserialiseProductsAsync();      
     }
 }
