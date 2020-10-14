@@ -1,4 +1,4 @@
-﻿
+﻿@inject SignInManager<ApplicationUser> signInManager;
 <!DOCTYPE html>
 
 <html>
@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="~lib/chartist/chartist.min.css">
         <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
         <script src="~/lib/chartist/chartist.min.js"></script>
-            <script src="~/lib/jquery/jquery.js"></script>
+        <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/jquery-validate/jquery.validate.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
         <script src="~/lib/bootstrap/js/bootstrap.js"></script>
@@ -50,17 +50,28 @@
             </button>
             <div class="navbar navbar-collapse" id="CollapseNavBar">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a asp-action="index" asp-controller="home" class="nav-link">List</a>
-                    </li>
-                    <li class="nav-item">
-                        <a asp-action="create" asp-controller="home" class="nav-link">Create</a>
-                    </li>              
+                    
+                    @if (signInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item ml-auto">
+                            <form method="post" asp-action="logout" asp-controller="account" class="nav-link">
+                                <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                                    Выйти @User.Identity.Name
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item ml-auto">
+                            <a asp-action="register" asp-controller="account" class="nav-link">Зарегистрироваться</a>
+                        </li>
+                        <li class="nav-item ml-auto">
+                            <a asp-action="login" asp-controller="account" class="nav-link">Войти</a>
+                        </li>
+                    }
                 </ul>
                 <ul class="navbar-nav">
-
-                   
-
                 </ul>
             </div>
         </nav>

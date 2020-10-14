@@ -5,15 +5,20 @@ using System.Threading.Tasks;
 using Buisness.Update;
 using Hangfire;
 using Hangfire.Storage;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using stock.Models;
 using stockDataEF.Models;
+using stockDataEF.Models.Repositories;
+using stockDataEF.Models.Tables;
 
 namespace stock
 {
@@ -30,11 +35,40 @@ namespace stock
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connection)); 
+            services.AddIdentity<ApplicationUser,IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();//???
+
+
             services.AddControllersWithViews();
+          
+            services.Configure<IdentityOptions>(o =>
+            {
+                o.Password.RequireLowercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 5;
+                o.SignIn.RequireConfirmedEmail = false;
+            }
+                );
+            services.AddAuthentication();
+            services.AddAuthorization( options =>
+                {
+                var policy = new AuthorizationPolicyBuilder().
+                                RequireAuthenticatedUser().
+                                Build();
+                    options.AddPolicy("auth",policy);
+                }
+                );
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = new PathString("/Administration/AccessDenied");
+            });
+
             services.AddScoped<IRepository<Product>, SQLProductRepository>();
             services.AddScoped<IRepository<Stock>, SQLStockRepository>();
             services.AddScoped<IRepository<DatedPrice>, SQLDatedPriceRepository>();
+            services.AddScoped<IRepository<ExternalLogin>, SQLExternalLoginRepository>();
             services.AddScoped<UpdateStocks>();
             services.AddHangfire(x => x.UseSqlServerStorage(connection));
             services.AddHangfireServer();
@@ -59,14 +93,14 @@ namespace stock
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");                   
             });
            app.UseHangfireDashboard();      
             RecurringJob.AddOrUpdate("id_update_stocks",() => updateStocks.Update(), Cron.Minutely);

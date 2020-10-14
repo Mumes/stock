@@ -1,21 +1,21 @@
 ﻿@model IEnumerable<Stock>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Все возможные биржи";
 }
 
 <div class="text-center">
     <h1 class="display-4">Ниже перечислены доступные биржи</h1>
-    <a asp-controller="home" asp-action="AddStockList" class="btn btn-primary m-1">Добавить биржу в аккаунт</a>
+    <a asp-controller="home" asp-action="Add" class="btn btn-primary m-1">Добавить конект</a>
     @foreach (var emp in Model)
     {
-        <div class="card m-6" style="min-width:18rem;max-width:48%;">
+        <div class="card m-3" style="min-width:18rem;max-width:30.5%;">
             <div class="card-header">
                 <h3> @emp.Name</h3>
             </div>
 
             <div class="card-footer text-center">
                 <a asp-controller="home" asp-action="details" asp-route-id="@emp.Id" class="btn btn-primary m-1">Просмотр</a>
-                <a asp-controller="home" asp-action="read" asp-route-id="@emp.Id" class="btn btn-primary  m-1"> Прочитать</a>
+                <a asp-controller="home" asp-action="addstockconection" asp-route-id="@emp.Id" class="btn btn-primary  m-1"> Добавить</a>
                 <a asp-controller="home" asp-action="delete" asp-route-id="@emp.Id" class="btn btn-danger  m-1">Удалить</a>
             </div>
         </div>

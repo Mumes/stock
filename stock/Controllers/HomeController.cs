@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using stock.Buisness.APIRead.Stocks;
@@ -13,18 +15,26 @@ using stockDataEF.Models.Tables;
 
 namespace stock.Models
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IRepository<Stock> stockRepository;
         private readonly IRepository<Product> productRepository;
         private readonly IRepository<DatedPrice> priceRepository;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IRepository<ExternalLogin> externalLoginRepostory;
 
-        public HomeController(ILogger<HomeController> logger, IRepository<Stock> stockRepository, IRepository<Product> productRepository,IRepository<DatedPrice> priceRepository)
+        public HomeController(ILogger<HomeController> logger, IRepository<Stock> stockRepository,
+                                IRepository<Product> productRepository,IRepository<DatedPrice> priceRepository
+                                , IRepository<ExternalLogin> externalLoginRepostory
+                                ,UserManager<ApplicationUser> userManager)
         {
             this.stockRepository = stockRepository;
             this.productRepository = productRepository;
             this.priceRepository = priceRepository;
+            this.userManager = userManager;
+            this.externalLoginRepostory = externalLoginRepostory;
             _logger = logger;
         }
 
@@ -34,6 +44,36 @@ namespace stock.Models
             var model = new Stock();
             model.ProductsAPIStrings.Add(new APIStrings());
             return View(model);
+        }
+
+        public IActionResult AddStockList()
+        {
+            var model = stockRepository.GetAll();
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult AddStockConection()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task <IActionResult> AddStockConection( AddStockConnectionViewModel model, int id)
+        {
+            var user = await userManager.FindByNameAsync(User.Identity.Name);
+            ExternalLogin externalLogin = new ExternalLogin
+            {
+                Login = model.Login,
+                Password = model.Password,
+                StockId = id,
+               // ApplicationUserId = user.Id
+            };
+            user.AvaliableStocks.Add(externalLogin);
+            
+            IdentityResult result = await userManager.UpdateAsync(user);
+            // externalLoginRepostory.Add(externalLogin);
+            return RedirectToAction("index");
         }
 
         [HttpPost]
@@ -47,10 +87,14 @@ namespace stock.Models
             return View();
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var model =  stockRepository.GetAll();
-            return View(model);
+           // var model =  stockRepository.GetAll();
+            var model = await userManager.FindByNameAsync(User.Identity.Name);
+            List<Stock> stocks = new List<Stock>();
+            foreach (var stock in externalLoginRepostory.GetAll().Where(p=>p.ApplicationUserId == model.Id).Select(p=>p.StockId).ToList())
+                stocks.Add(stockRepository.Get(stock));
+            return View(stocks);
         }
 
         public async  Task<IActionResult> Read(int Id)

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using stockDataEF.Models;
 
 namespace stockDataEF.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201005135346_avaliablestocks")]
+    partial class avaliablestocks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,6 +269,9 @@ namespace stockDataEF.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
@@ -276,6 +281,8 @@ namespace stockDataEF.Migrations
                         .HasMaxLength(200);
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Stocks");
                 });
@@ -305,34 +312,6 @@ namespace stockDataEF.Migrations
                     b.HasIndex("StockId");
 
                     b.ToTable("APIStrings");
-                });
-
-            modelBuilder.Entity("stockDataEF.Models.Tables.ExternalLogin", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Login")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StockId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("StockId");
-
-                    b.ToTable("ExternalLogins");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -404,23 +383,17 @@ namespace stockDataEF.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("stockDataEF.Models.Tables.APIStrings", b =>
-                {
-                    b.HasOne("stockDataEF.Models.Stock", "Stock")
-                        .WithMany("ProductsAPIStrings")
-                        .HasForeignKey("StockId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("stockDataEF.Models.Tables.ExternalLogin", b =>
+            modelBuilder.Entity("stockDataEF.Models.Stock", b =>
                 {
                     b.HasOne("stock.Models.ApplicationUser", null)
                         .WithMany("AvaliableStocks")
                         .HasForeignKey("ApplicationUserId");
+                });
 
+            modelBuilder.Entity("stockDataEF.Models.Tables.APIStrings", b =>
+                {
                     b.HasOne("stockDataEF.Models.Stock", "Stock")
-                        .WithMany()
+                        .WithMany("ProductsAPIStrings")
                         .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

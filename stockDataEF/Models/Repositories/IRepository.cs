@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace stockDataEF.Models
 {
-    public interface IRepository<T>
+    public interface IRepository<T> 
     {
         T Get(int id);
         IEnumerable<T> GetAll();
