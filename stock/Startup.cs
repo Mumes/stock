@@ -19,7 +19,7 @@ using stock.Models;
 using stockDataEF.Models;
 using stockDataEF.Models.Repositories;
 using stockDataEF.Models.Tables;
-
+using Serilog;
 namespace stock
 {
     public class Startup
@@ -91,7 +91,7 @@ namespace stock
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
